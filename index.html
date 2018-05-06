@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Time Swap by Mike</title>
+    <meta charset="UTF-8" />
+    <style>
+      body{
+        background-color: black;
+        font-family: sans-serif;
+        font-weight: 100;
+      }
+      .letter{
+        position: absolute;
+        transition: 1s all;
+        font-size: 30px;
+        color: rgba(255, 255, 255, 0);
+        text-shadow: 0 0 0 rgba(255, 255, 255, 1);
+      }
+
+      .letter[used=true]{
+        opacity: 1;
+      }
+
+      .letter[used=false]{
+        text-shadow: 0 0 7px rgba(255, 255, 255, 1);
+      }
+
+      input{
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: 15px;
+        padding: 10px;
+        outline: 0;
+        border: 0;
+        margin: 0;
+        box-sizing: border-box;
+        width: 100%;
+        background-color: #333;
+        color: #CCC;
+      }
+    </style>
+    <script>
+      var ATTR = "used";
+      var TEXT_X = 50;
+      var TEXT_Y = 150;
+      var POOL_X = 50;
+      var POOL_Y = 20 + 30;
+      var TEXT_PADDING = 50;
+      var POOL_PADDING = 50;
+
+      var letters = [];
+      var textWidth = 0;
+      var textHeight = 0;
+      var poolWidth = 0;
+      var poolHeight = 0;
+
+      function spell(text){
+        //text = text.toLowerCase();
+        textWidth = 0;
+        textHeight = 0;
+        poolWidth = 0;
+        poolHeight = 0;
+
+        for(var i = 0; i < letters.length; i++){
+          letters[i].setAttribute(ATTR, false);
+        }
+
+        for(var i = 0; i < text.length; i++){
+          var found = null;
+          var char = text.charAt(i);
+          for(var j = 0; j < letters.length; j++){
+            var letter = letters[j];
+            if(letter.getAttribute("char") == char && letter.getAttribute(ATTR) == "false"){
+              found = letter;
+              letter.setAttribute(ATTR, true);
+              break;
+            }
+          }
+          if(found == null){
+            var found = document.createElement("div");
+            found.className = "letter";
+            found.innerHTML = char.replace(" ", "&nbsp;");
+            found.setAttribute("char", char);
+            found.setAttribute(ATTR, true);
+            found.style.left = TEXT_X + textWidth + "px";
+            found.style.top =  "-50px";
+            document.body.appendChild(found);
+            letters.push(found);
+          }
+          found.style.transition = (Math.random() * i/50 + 1) + "s all";
+          if(found.clientWidth + TEXT_X + textWidth >= window.innerWidth - TEXT_PADDING){
+            textHeight += found.clientHeight;
+            textWidth = 0;
+          }
+          found.style.left = TEXT_X + textWidth + "px";
+          found.style.top = TEXT_Y + textHeight + "px";
+          textWidth += found.clientWidth;
+        }
+
+        //shuffle(letters);
+
+        for(var i = 0; i < letters.length; i++){
+          var letter = letters[i];
+          if(letter.getAttribute(ATTR) == "false"){
+            if(letter.clientWidth + POOL_X + poolWidth >= window.innerWidth - POOL_PADDING){
+              poolHeight += letter.clientHeight;
+              poolWidth = 0;
+            }
+            letter.style.transition = (Math.random() * 0.3 + 0.7) + "s all";
+            letter.style.left = POOL_X + poolWidth + "px";
+            letter.style.top = POOL_Y + TEXT_Y + poolHeight + textHeight + "px";
+            if(letter.getAttribute("char") != " ") poolWidth += letter.clientWidth;
+          }
+        }
+      }
+
+      function shuffle(a) {
+          var j, x, i;
+          for (i = a.length; i; i -= 1) {
+              j = Math.floor(Math.random() * i);
+              x = a[i - 1];
+              a[i - 1] = a[j];
+              a[j] = x;
+          }
+      }
+
+      var phrases = [
+      "Make typing and story telling cool",
+      "quack pakak",
+      "and then she said",
+      "and then she said.",
+      "and then she said..",
+      "and then she said...",
+      "and then she said... some fries motherfucker",
+      "Zero Gravity",
+      "by Eric Gamalinda",
+      "The dry basin of the moon must have held the bones of a race, radiant minerals,",
+      "or something devoid of genesis, angel-heavy, idea-pure. All summer we had waited for it,",
+      "our faces off-blue in front of the TV screen. Nothing could be more ordinary — two figures Digging dirt in outer space — while mother repeated Neil Armstrong’s words like, a prayer",
+      "Electronically conveyed. The dunes were lit like ancient silk, like clandestine pearl.",
+      "In the constant lunar night this luminescence was all we hoped for. A creature unto itself,",
+      "it poured into the room like a gradual flood",
+      "of lighting, touching every object with the cool burn of something not quite on fire. If we stepped out Manila would be blank ether, way station,",
+      "a breathless abeyance. It didn’t matter,",
+      "at that moment, where our lives would lead: father would disown one brother,",
+      "one sister was going to die. Not yet unhappy,",
+      "we were ready to walk on the moon. Reckless",
+      "in our need for the possible, we knew",
+      "there was no turning back, our bags already packed, the future a religion we could believe in.",
+      "Next poem:",
+      "(591)",
+      "by Emily Dickinson",
+      "I heard a Fly buzz - when I died - The Stillness in the Room",
+      "Was like the Stillness in the Air - Between the Heaves of Storm -",
+      "The Eyes around - had wrung them dry - And Breaths were gathering firm",
+      "For that last Onset - when the King",
+      "Be witnessed - in the Room -",
+      "I willed my Keepsakes - Signed away What portion of me be",
+      "Assignable - and then it was",
+      "There interposed a Fly -",
+      "With Blue - uncertain - stumbling Buzz - Between the light - and me -",
+      "And then the Windows failed - and then I could not see to see -"];
+      [
+        "Hi",
+        "hello",
+        "my name is mike",
+        "my name is mike del castillo",
+        "i'm really bored",
+        "and pretty sleepy",
+        "so",
+        "i decided to make this",
+        "this just looks cool",
+        "i'm planning to",
+        "make this into some watch",
+        "that tells the time",
+        "in a cool and fun way",
+        "heheheh",
+        "new letters fall from above",
+        "unused letters fall below",
+        "you can do interesting",
+        "text presentations hahaha",
+        "fml",
+        "why",
+        "does",
+        "this",
+        "remind",
+        "me",
+        "of",
+        "Harry Potter"
+      ];
+      var phraseCount = -1;
+
+      document.addEventListener("click", function(){
+        document.getElementById("text").focus();
+        spell(phrases[phraseCount = (phraseCount + 1)%phrases.length]);
+      }, false);
+
+    </script>
+  </head>
+  <body>
+    <script>
+      spell("Start clicking anywhere or typing anything");
+      for(var i = 0; i < 100; i++){
+        phrases.push(String(Math.round(Math.random() * 100000000)));
+      }
+    </script>
+    <input type="text" id="text"  />
+    <script>
+      document.getElementById("text").focus();
+      document.getElementById("text").addEventListener("input", function(e){
+        spell(document.getElementById("text").value);
+      }, false);
+    </script>
+  </body>
+</html>
